@@ -11,6 +11,7 @@ channelUserName= '@vent_gemenaye'
 bot = telebot.TeleBot(TOKEN)
 issueIds = {}
 issueAll = {}
+delete ={}
 
 
 start_new_thread( Api.getUpdate,(bot,channelUserName))
@@ -133,11 +134,15 @@ try:
             elif text[0] == "category":
                 Api.addIssue(issueAll[uid], uid,text[1])
                 bot.send_message(uid,"issue added! wait for approval",reply_markup = buttonStart())
-                bot.send_message(uid,"Do You need MENTOR",reply_markup = mentor())
+                xy=bot.send_message(uid,"Do You need MENTOR",reply_markup = mentor())
+                delete[uid] = xy
             elif text[0] == "mentor":
+                bot.delete_message(uid,delete[uid].message_id)
                 bot.send_message(uid,"We have recived your information and we will contact you soon")
             elif text[0] == "no":
+                bot.delete_message(uid,delete[uid]['message_id'])
                 bot.send_message(uid,"Thank you")
+
 
 
         except Exception as identifier:
@@ -194,6 +199,8 @@ You can control me By sending this commands:
                 bot.send_message(uid, '''ለምን ብቻዎትን ይጨነቃሉ? እኛም ገመና አልን ገመናዎትን ያካፍሉን።
 አንተ ባለፍክበት ያለፈ ሰው አለ
 ማንነቶ ሳይታወቅ (ሳይገለጸ)  እዚህ አማካሪ  ያናግሩ ።''')
+            elif text == '❌ Cancel' :
+                bot.send_message(uid,"cancelled!",reply_markup = buttonStart())
 
         except:
             pass
