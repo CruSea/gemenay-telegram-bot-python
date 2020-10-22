@@ -9,8 +9,8 @@ userStep = {}
 TOKEN = '1106406965:AAERNIQapZhDd3zHxKmQztjsjaVFrV691xk'
 channelUserName= '@vent_gemenaye'
 bot = telebot.TeleBot(TOKEN)
-bot.delete_webhook()
 issueIds = {}
+issueAll = {}
 
 
 start_new_thread( Api.getUpdate,(bot,channelUserName))
@@ -56,6 +56,17 @@ def mentor():
                 InlineKeyboardButton("no, I don't", callback_data="no"))
     return markup
 
+def categoryButton():
+    try:
+        markup = InlineKeyboardMarkup()
+        markup.row_width = 1
+        category = Api.category()
+        for c in category:
+            markup.add(InlineKeyboardButton(c['name'], callback_data="category--"+str(c['id'])))
+        return markup
+    except Exception as identifier:
+        print(identifier)
+
 
 def get_user_step(uid):
     if uid in userStep:
@@ -100,13 +111,11 @@ try:
         try:
             uid=call.from_user.id
             text = str(call.data)
-            print(text)
             text = text.split("--")
             if text[0] == "Add_a_comment":
                 bot.answer_callback_query(call.id, "send your comment")
                 bot.send_message(uid,"Add comment...",reply_markup = cancel())
                 issueIds[0] = int(text[1])
-                print(issueIds[0])
                 userStep[uid] = 2
             elif text[0] == "Browse_comments":
                 #issueIds[0] = int(text[1]);
@@ -114,15 +123,25 @@ try:
                 bot.answer_callback_query(call.id, "comment coming up")
                 comm=Api.bComment(text[1])
                 try:
-                    print(comm)
                     i=0
                     for ids in comm:
                         bot.send_message(uid, comm[i]['comment'],reply_markup= like())
                         i=i+1
                 except:
                     bot.send_message(uid,"No comment.....",reply_markup = buttonStart())
-        except:
-            pass
+
+            elif text[0] == "category":
+                Api.addIssue(issueAll[uid], uid,text[1])
+                bot.send_message(uid,"issue added! wait for approval",reply_markup = buttonStart())
+                bot.send_message(uid,"Do You need MENTOR",reply_markup = mentor())
+            elif text[0] == "mentor":
+                bot.send_message(uid,"We have recived your information and we will contact you soon")
+            elif text[0] == "no":
+                bot.send_message(uid,"Thank you")
+
+
+        except Exception as identifier:
+            print(identifier)
     @bot.message_handler(func=lambda message: get_user_step(message.chat.id) == 1)
     def submitIssue(m):
         try:
@@ -132,10 +151,9 @@ try:
                 bot.send_message(uid,"cancelled!",reply_markup = buttonStart())
                 userStep[uid] = 0
             else:
-                print(text + '  s')
-                Api.addIssue(issue = text, user_id = uid)
-                bot.send_message(uid,"issue added! wait for approval",reply_markup = buttonStart())
-                bot.send_message(uid,"Do You need MENTOR",reply_markup = mentor())
+                issueAll[uid]= text
+                x=categoryButton()
+                bot.send_message(uid,"Please select category that relate to your issue",reply_markup = x)
                 userStep[uid] = 0
         except:
             pass
@@ -149,18 +167,15 @@ try:
                 bot.send_message(uid,"cancelled!",reply_markup = buttonStart())
                 userStep[uid] = 0
             else:
-                print(text + '  c')
-                print(issueIds[0])
-                print("id id")
                 count = Api.addComment(issueIds[0],text,uid)
                 telegramId = count['telegramId']
+                print(telegramId)
                 commNo = count['count']
-                print(issueIds[0])
                 editCommentButton(telegramId,issueIds[0],commNo)
                 bot.send_message(uid, "Comment added",reply_markup = buttonStart())
                 userStep[uid] = 0
-        except:
-            pass
+        except Exception as identifier:
+            print(identifier)
 
 
     @bot.message_handler(func=lambda message: True, content_types=['text'])
@@ -171,7 +186,15 @@ try:
             if text == "🔆 Start a Vent":
                 bot.send_message(uid, "Please send your issue.",reply_markup = cancel())
                 userStep[uid] = 1
-            #elif text=="":
+            elif text=="💡 Help":
+                bot.send_message(uid, '''Hey 👋 I'm Gemenaye Bot.
+You can control me By sending this commands:
+/start  - Hellps to start a bot or bring the main menu''')
+            elif text=="👥 About Us":
+                bot.send_message(uid, '''ለምን ብቻዎትን ይጨነቃሉ? እኛም ገመና አልን ገመናዎትን ያካፍሉን።
+አንተ ባለፍክበት ያለፈ ሰው አለ
+ማንነቶ ሳይታወቅ (ሳይገለጸ)  እዚህ አማካሪ  ያናግሩ ።''')
+
         except:
             pass
 except Exception as identifier:

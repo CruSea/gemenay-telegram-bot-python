@@ -1,9 +1,9 @@
 import requests
-# import telebot
+#import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 import time
 
-link = "https://1a04b8ab813b.ngrok.io/"
+link = "https://b0f33a1be919.ngrok.io/"
 
 def getUpdate(bot,channelUserName):
     url = link + "api/issues/approved"
@@ -13,58 +13,58 @@ def getUpdate(bot,channelUserName):
         try:
             update = requests.get(url)
             update = update.json()
-            issue = update['issue']
+            issue = update['issue'] + '''
+#'''+update['category']['name']
             issueId = update['id']
-        except:
+        except Exception as identifier:
+            #print(identifier)
+            time.sleep(10)
             continue
-            pass
         try:
             m=update['message']
         except:
-            m="pass"
+            m = "pass"
 
         if m == "no data":
             pass
         else:
             try:
-                print(update)
                 markup = InlineKeyboardMarkup()
                 markup.row_width = 1
                 markup.add(InlineKeyboardButton("0 comments", url="t.me/vent_gemenaye_bot?start={}".format(issueId)))
                 x=bot.send_message(channelUserName,issue,reply_markup = markup)
-                print(x)
+                #facebook
+                url3 = "https://graph.facebook.com/v8.0/102531171655135/feed"
+                access_token ="EAAK4Jr5HVCkBAPZA0qoSmi3BQbZBGHr5O6SJmmzclcZAksaqTkHrVIYZC2Giw32GSvYJsMaDSROB5C0Tytbi950ZBSGUxlfQSeNRZCRBRmKrpxx5GwxnsC53ILXwD7zEA2OZBbKuTFzwJE9R4rRbQG9qzZAZAjvxtMf0LCZCofpQORH4ZBYp1EPjTGN"
+
+                data ={'message' : issue,
+                        'access_token' : access_token}
+                requests.post(url3,data)
+                #end facebook
                 telegramId = x.message_id
                 buttonId = 100
                 #update database
-                #time.sleep(5)
+                time.sleep(5)
                 url2 = link + "api/issues/{}/addDetails".format(issueId)
-                print(url2)
                 data ={'telegramId' : telegramId,
                         'buttonId' : buttonId}
                 x=requests.post(url2,data = data)
-                print("dettal")
-                print(x)
-            #send channel post
-            except:
-                print("while error")
+            except Exception as identifier:
+                print(identifier)
                 time.sleep(10)
-                pass
     time.sleep(10)
 
-
-def addIssue(issue, user_id):
+def addIssue(issue, user_id,categoryId):
     try:
         url = link + "api/issues"
-        data ={'issue' : issue ,'user_id' : user_id}
-        print(data)
-        x=requests.post(url,data=data)
-        print(x)
+        data ={'issue' : issue ,'user_id' : user_id, 'categoryId' : categoryId}
+        requests.post(url,data=data)
     except Exception as identifier:
         print("error")
 def getIssue(issueId):
     try:
         url= link + "api/issues/{}".format(issueId)
-        print(url)
+        #print(url)
         issue=requests.get(url)
         issue = issue.json()
         return issue['issue']
@@ -77,7 +77,7 @@ def addComment(issueId,comment,user_id):
         url = link + "api/issues/{}/comment".format(issueId)
         data = {'comment' : comment, 'user_id' : user_id}
         count=requests.post(url,data=data)
-        print(count)
+        #print(count)
         count = count.json()
         #telegramId = count['telegramId']
         #commNo = count['count']
@@ -87,13 +87,33 @@ def addComment(issueId,comment,user_id):
 def bComment(issueId):
     try:
         url = link + "api/issues/{}/comments".format(issueId)
-        print(url)
+        #print(url)
         comm=requests.get(url)
         comm= comm.json()
         return comm
     except Exception as identifier:
         print("error")
-#comm
-#usi
-#isu id
+
+
+def category():
+    try:
+        url = link + "api/categories"
+        #print(url)
+        cata=requests.get(url)
+        cata= cata.json()
+        #print(cata)
+        return cata
+    except Exception as identifier:
+        print(identifier)
+
+
+
+
+
+
+
+
+
+
+
 
