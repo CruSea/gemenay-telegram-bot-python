@@ -24,7 +24,7 @@ def buttonVent(ids,numOfComment):
 
 def buttonStart():
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    markup.row_width = 1
+    markup.row_width = 2
     markup.add('🔆 Start a Vent', '💡 Help', '⚙️ Settings', '👥 About Us')
     return markup
 
