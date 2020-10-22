@@ -78,8 +78,8 @@ def extract_unique_code(text):
     return text.split()[1] if len(text.split()) > 1 else None
 
 @bot.message_handler(commands=['start'])
-try:
-    def send_welcome(message):
+def send_welcome(message):
+    try:
         uid = message.chat.id
         userStep[uid] = 0
         unique_code = extract_unique_code(message.text)
@@ -88,8 +88,8 @@ try:
             bot.send_message(uid,str(issue),reply_markup = buttonComment(unique_code))
         else:
             bot.send_message(uid,"Welcome to vent gemenaye",reply_markup = buttonStart())
-except:
-    pass
+    except:
+        pass
 
 
 try:
@@ -104,7 +104,7 @@ try:
             if text[0] == "Add_a_comment":
                 bot.answer_callback_query(call.id, "send your comment")
                 bot.send_message(uid,"Add comment...",reply_markup = cancel())
-                issueIds[0] = int(text[1]);
+                issueIds[0] = int(text[1])
                 print(issueIds[0])
                 userStep[uid] = 2
             elif text[0] == "Browse_comments":
