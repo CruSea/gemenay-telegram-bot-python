@@ -140,7 +140,7 @@ try:
                 bot.delete_message(uid,delete[uid].message_id)
                 bot.send_message(uid,"We have recived your information and we will contact you soon")
             elif text[0] == "no":
-                bot.delete_message(uid,delete[uid]['message_id'])
+                bot.delete_message(uid,delete[uid].message_id)
                 bot.send_message(uid,"Thank you")
 
 
