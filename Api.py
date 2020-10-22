@@ -3,7 +3,7 @@ import requests
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 import time
 
-link = "https://b0f33a1be919.ngrok.io/"
+link = "http://159.65.230.4/"
 
 def getUpdate(bot,channelUserName):
     url = link + "api/issues/approved"
@@ -12,6 +12,7 @@ def getUpdate(bot,channelUserName):
         #update = update.json()
         try:
             update = requests.get(url)
+            print(update)
             update = update.json()
             issue = update['issue'] + '''
 #'''+update['category']['name']
