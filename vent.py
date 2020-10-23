@@ -14,7 +14,7 @@ issueAll = {}
 delete ={}
 
 
-start_new_thread( Api.getUpdate,(bot,channelUserName))
+#start_new_thread( Api.getUpdate,(bot,channelUserName))
 
 
 def buttonVent(ids,numOfComment):

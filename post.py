@@ -1,7 +1,13 @@
-import requests
-#import telebot
+import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 import time
+import requests
+
+TOKEN = '1106406965:AAERNIQapZhDd3zHxKmQztjsjaVFrV691xk'
+channelUserName= '@vent_gemenaye'
+bot = telebot.TeleBot(TOKEN)
+
+
 
 link = "http://159.65.230.4/"
 
@@ -12,7 +18,7 @@ def getUpdate(bot,channelUserName):
         #update = update.json()
         try:
             update = requests.get(url)
-            #print(update)
+            print(update)
             update = update.json()
             issue = update['issue'] + '''
 #'''+update['category']['name']
@@ -55,66 +61,5 @@ def getUpdate(bot,channelUserName):
                 time.sleep(10)
     time.sleep(10)
 
-def addIssue(issue, user_id,categoryId):
-    try:
-        url = link + "api/issues"
-        data ={'issue' : issue ,'user_id' : user_id, 'categoryId' : categoryId}
-        requests.post(url,data=data)
-    except Exception as identifier:
-        print("error")
-def getIssue(issueId):
-    try:
-        url= link + "api/issues/{}".format(issueId)
-        #print(url)
-        issue=requests.get(url)
-        issue = issue.json()
-        return issue['issue']
-    except Exception as identifier:
-        print("error")
 
-
-def addComment(issueId,comment,user_id):
-    try:
-        url = link + "api/issues/{}/comment".format(issueId)
-        data = {'comment' : comment, 'user_id' : user_id}
-        count=requests.post(url,data=data)
-        #print(count)
-        count = count.json()
-        #telegramId = count['telegramId']
-        #commNo = count['count']
-        return count
-    except Exception as identifier:
-        print("error")
-def bComment(issueId):
-    try:
-        url = link + "api/issues/{}/comments".format(issueId)
-        #print(url)
-        comm=requests.get(url)
-        comm= comm.json()
-        return comm
-    except Exception as identifier:
-        print("error")
-
-
-def category():
-    try:
-        url = link + "api/categories"
-        #print(url)
-        cata=requests.get(url)
-        cata= cata.json()
-        #print(cata)
-        return cata
-    except Exception as identifier:
-        print(identifier)
-
-
-
-
-
-
-
-
-
-
-
-
+getUpdate(bot,channelUserName)
