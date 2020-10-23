@@ -3,7 +3,7 @@ import requests
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 import time
 
-link = "http://159.65.230.4/"
+link = "http://159.65.230.4:3000/"
 
 def getUpdate(bot,channelUserName):
     url = link + "api/issues/approved"
