@@ -210,4 +210,4 @@ except Exception as identifier:
 
 
 
-bot.polling()
+bot.polling(none_stop=True)

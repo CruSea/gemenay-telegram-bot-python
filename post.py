@@ -9,7 +9,7 @@ bot = telebot.TeleBot(TOKEN)
 
 
 
-link = "http://159.65.230.4/"
+link = "http://159.65.230.4:3000/"
 
 def getUpdate(bot,channelUserName):
     url = link + "api/issues/approved"
