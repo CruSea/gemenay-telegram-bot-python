@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 import time
